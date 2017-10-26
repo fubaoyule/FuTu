@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  FuTu
+
+  Created by Administrator1 on 12/10/16.
+  Copyright © 2016 Taylor Tan. All rights reserved.
+*/
+//TouchID
+NEED_TOUCH_ID="需要您的指纹来验证";
+OTHER_USER_LOGIN="其他用户登录";
+
+
+
+//CoreLock
+PLEASE_OPEN_GESTURE="请先开启手势开关!";
+PLEASE_LINK_MORE="请连接至少%@个点！";
+TIMES_OF_CHANCE="%@ 您还有%@次机会！";
+CLOSE="关闭";
+PLEASE_SET_NEW_PW="请滑动设置新密码";
+PLEASE_INPUT_PW_AGAIN="请再次输入确认密码";
+INPUT_PW_AGAIN_DIFFERENT="再次输入密码不一致";
+SET_PW_SUCCESS="密码设置成功!";
+PLEASE_INPUT_PW="请滑动输入密码";
+INPUT_ERROR="输入错误，";
+PW_OK="密码正确";
+PLEASE_INPUT_OLD_PW="请输入旧密码";
+SET_PW="设置密码";
+GESTURE_LOCK="手势解锁";
+MODIFY_PW="修改密码";
+RESET_PW="重设";
+
