@@ -261,7 +261,7 @@ class GameViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
             var urlString_success = (urlString as! String).replacingOccurrences(of: "u0026", with: "&")
             urlString_success = urlString_success.replacingOccurrences(of: " ", with: "")
             let url = URL(string: urlString_success)
-            tlPrint(message: "url\(String(describing: url))")
+            tlPrint(message: "url:\(String(describing: url))")
             tlPrint(message: "gameType:\(gameType)")
             var cachePolicy = NSURLRequest.CachePolicy.useProtocolCachePolicy
             if let gameType = userDefaults.value(forKey: userDefaultsKeys.gameType.rawValue) {

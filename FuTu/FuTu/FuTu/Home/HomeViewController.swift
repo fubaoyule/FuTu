@@ -1085,65 +1085,114 @@ class HomeViewController: UIViewController,UIAlertViewDelegate, SDCycleScrollVie
     //Mark:- get请求获得当前最新域名和版本信息等
     //===========================================
     var appUpdateUrl = ""
+//    func requestLatestInfo() -> Void {
+//        tlPrint(message: "requestLatestInfo  >>>>>>>>><<<<<<<<<<<<<<")
+//        let userDefaults = UserDefaults.standard
+//        var returnValue  = NSDictionary()
+//        //动态域名url字符串的转码
+//        let urlString = dynamicDomainUrl.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+//        //创建管理者对象
+//        let manager = AFHTTPSessionManager()
+//        //设置允许请求的类别
+//        manager.responseSerializer.acceptableContentTypes = NSSet(objects: "text/plain", "text/json", "application/json","charset=utf-8","text/javascript","text/html", "application/javascript", "text/js") as? Set<String>
+//        manager.securityPolicy.allowInvalidCertificates = true
+//        //数据类型选择
+//        manager.requestSerializer = AFJSONRequestSerializer()
+//        manager.responseSerializer = AFJSONResponseSerializer()
+//        _ = DispatchQueue.global().sync {
+//            manager.get(urlString, parameters: nil, progress: { (progress) in
+//                
+//            }, success: { (task, response) in
+//                returnValue = response as! NSDictionary
+//                
+//                tlPrint(message: "response:\(String(describing: response))")
+//                let oldDomainName = userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue)
+//                let oldAppVersion = SystemInfo.getCurrentVersion()
+//                let newDomainName = returnValue.value(forKey: "doMain")
+//                let newAppVersion = returnValue.value(forKey: "version")
+//                if let domainName = newDomainName {
+//                    if (domainName as! String) != (oldDomainName as! String)  {
+//                        //将新的域名写进数据库，发送重新加载网页的消息通知
+//                        let domain = domainName as! String
+//                        tlPrint(message: "domain1: \(domain)")
+//                        userDefaults.setValue((domain), forKey: userDefaultsKeys.domainName.rawValue)
+//                        userDefaults.synchronize()
+//                    }
+//                    let domain = userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue) as! String
+//                    tlPrint(message: "domain2: \(domain)")
+//                }
+//                if oldAppVersion < newAppVersion as! String{
+//                    tlPrint(message: "***********  oldAppVersion:\(oldAppVersion) < newAppVersion:\(String(describing: newAppVersion))")
+//                    //有新的版本，提示用户更新
+//                    tlPrint(message: "请更新版本")
+//                    if let updateUrl = returnValue.value(forKey: "downloadAddr") {
+//                        //获取app的更新地址
+//                        tlPrint(message: "get the download address: \(updateUrl)")
+//                        self.appUpdateUrl = (updateUrl as! String)
+//                        tlPrint(message: "self.appUpdateUrl : \(self.appUpdateUrl)")
+//                        
+//                        let alert = UIAlertView(title: "升级提示", message: "你当前的版本是V\(oldAppVersion)，发现新版本V\(newAppVersion as! String),是否下载新版本？\n(若提示无法下载，请卸载以后在官网扫码下载)", delegate: self, cancelButtonTitle: "下次再说", otherButtonTitles: "立即下载")
+//                        alert.tag = 10
+//                        alert.show()
+//                        tlPrint(message: "当前bundleID为：\(SystemInfo.getBundleID())")
+//                    }
+//                }
+//                tlPrint(message: "response:\(String(describing: response))")
+//            }, failure: { (task, error) in
+//                tlPrint(message: "请求失败\nERROR:\n\(error)")
+//            })
+//        }
+//    }
+//    
+    
+    
+    
     func requestLatestInfo() -> Void {
-        tlPrint(message: "requestLatestInfo  >>>>>>>>><<<<<<<<<<<<<<")
-        let userDefaults = UserDefaults.standard
-        var returnValue  = NSDictionary()
-        //动态域名url字符串的转码
-        let urlString = dynamicDomainUrl.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-        //创建管理者对象
-        let manager = AFHTTPSessionManager()
-        //设置允许请求的类别
-        manager.responseSerializer.acceptableContentTypes = NSSet(objects: "text/plain", "text/json", "application/json","charset=utf-8","text/javascript","text/html", "application/javascript", "text/js") as? Set<String>
-        manager.securityPolicy.allowInvalidCertificates = true
-        //数据类型选择
-        manager.requestSerializer = AFJSONRequestSerializer()
-        manager.responseSerializer = AFJSONResponseSerializer()
-        _ = DispatchQueue.global().sync {
-            manager.get(urlString, parameters: nil, progress: { (progress) in
-                
-            }, success: { (task, response) in
-                returnValue = response as! NSDictionary
-                
-                tlPrint(message: "response:\(String(describing: response))")
-                let oldDomainName = userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue)
-                let oldAppVersion = SystemInfo.getCurrentVersion()
-                let newDomainName = returnValue.value(forKey: "doMain")
-                let newAppVersion = returnValue.value(forKey: "version")
-                if let domainName = newDomainName {
-                    if (domainName as! String) != (oldDomainName as! String)  {
-                        //将新的域名写进数据库，发送重新加载网页的消息通知
-                        let domain = domainName as! String
-                        tlPrint(message: "domain1: \(domain)")
-                        userDefaults.setValue((domain), forKey: userDefaultsKeys.domainName.rawValue)
-                        userDefaults.synchronize()
-                    }
-                    let domain = userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue) as! String
-                    tlPrint(message: "domain2: \(domain)")
+        futuNetworkRequest(type: .get, serializer: .http, url: "Mobile/GetMobileConfig", params: nil, success: { (response) in
+            tlPrint(message:"response: \(response)")
+            var string = String(data: response as! Data, encoding: String.Encoding.utf8)
+            string = string!.replacingOccurrences(of: "\"{", with: "{")
+            string = string!.replacingOccurrences(of: "}\"", with: "}")
+            string = string!.replacingOccurrences(of: "\\", with: "")
+            tlPrint(message: "string: \(String(describing: string))")
+            let returnValue = (string)?.objectFromJSONString() as! Dictionary<String, Any>
+            //            let returnValue = response as! NSDictionary
+            let oldDomainName = self.userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue)
+            let oldAppVersion = SystemInfo.getCurrentVersion()
+            let newDomainName = returnValue["doMain"]
+            let newAppVersion = returnValue["version"]
+            if let domainName = newDomainName {
+                if (domainName as! String) != (oldDomainName as! String)  {
+                    //将新的域名写进数据库，发送重新加载网页的消息通知
+                    let domain = domainName as! String
+                    tlPrint(message: "domain1: \(domain)")
+                    self.userDefaults.setValue((domain), forKey: userDefaultsKeys.domainName.rawValue)
+                    self.userDefaults.synchronize()
                 }
-                if oldAppVersion < newAppVersion as! String{
-                    tlPrint(message: "***********  oldAppVersion:\(oldAppVersion) < newAppVersion:\(String(describing: newAppVersion))")
-                    //有新的版本，提示用户更新
-                    tlPrint(message: "请更新版本")
-                    if let updateUrl = returnValue.value(forKey: "downloadAddr") {
-                        //获取app的更新地址
-                        tlPrint(message: "get the download address: \(updateUrl)")
-                        self.appUpdateUrl = (updateUrl as! String)
-                        tlPrint(message: "self.appUpdateUrl : \(self.appUpdateUrl)")
-                        
-                        let alert = UIAlertView(title: "升级提示", message: "你当前的版本是V\(oldAppVersion)，发现新版本V\(newAppVersion as! String),是否下载新版本？\n(若提示无法下载，请卸载以后在官网扫码下载)", delegate: self, cancelButtonTitle: "下次再说", otherButtonTitles: "立即下载")
-                        alert.tag = 10
-                        alert.show()
-                        tlPrint(message: "当前bundleID为：\(SystemInfo.getBundleID())")
-                    }
+                let domain = self.userDefaults.value(forKey: userDefaultsKeys.domainName.rawValue) as! String
+                tlPrint(message: "domain2: \(domain)")
+            }
+            if oldAppVersion < newAppVersion as! String{
+                tlPrint(message: "***********  oldAppVersion:\(oldAppVersion) < newAppVersion:\(String(describing: newAppVersion))")
+                //有新的版本，提示用户更新
+                tlPrint(message: "请更新版本")
+                if let updateUrl = returnValue["downloadAddr"] {
+                    //获取app的更新地址
+                    tlPrint(message: "get the download address: \(updateUrl)")
+                    self.appUpdateUrl = (updateUrl as! String)
+                    tlPrint(message: "self.appUpdateUrl : \(self.appUpdateUrl)")
+                    
+                    let alert = UIAlertView(title: "升级提示", message: "你当前的版本是V\(oldAppVersion)，发现新版本V\(newAppVersion as! String),是否下载新版本？\n(若提示无法下载，请卸载以后在官网扫码下载)", delegate: self, cancelButtonTitle: "下次再说", otherButtonTitles: "立即下载")
+                    alert.tag = 10
+                    alert.show()
+                    tlPrint(message: "当前bundleID为：\(SystemInfo.getBundleID())")
                 }
-                tlPrint(message: "response:\(String(describing: response))")
-            }, failure: { (task, error) in
-                tlPrint(message: "请求失败\nERROR:\n\(error)")
-            })
+            }
+            tlPrint(message: "response:\(String(describing: response))")
+        }) { (error) in
+            tlPrint(message: "Error: \(error)")
         }
     }
-    
     func btnAct(sender:UIButton) -> Void {
         switch sender.tag {
         case HomeTag.loginBtnTag.rawValue:

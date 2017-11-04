@@ -1054,7 +1054,7 @@ class GameLobbyViewController: UIViewController,UITextFieldDelegate, UIScrollVie
             }
             
             
-            RotateScreen.left()
+            RotateScreen.right()
             let gameVC = GameViewController()
             gameVC.param = ["orientation":"right","url":url] as AnyObject
             gameVC.isFromLandscap = true

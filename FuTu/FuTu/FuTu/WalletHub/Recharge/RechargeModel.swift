@@ -246,13 +246,14 @@ class RechargeModel: NSObject {
             array[array.count - 1] = array[array.count - 1].replacingOccurrences(of: "}]", with: "}")
             var listDicArray:[Dictionary<String,Any>]!
             for i in 0 ..< array.count {
-                let sepArray = array[i].components(separatedBy: ",\"Sub_Title\":")
+                let sepArray = array[i].components(separatedBy: ",\"Id\":")
                 array[i] = sepArray[0]
                 if i == 0 {
                     array[i] = array[i].replacingOccurrences(of: "\"{", with: "")
                 }
                     array[i] = "{" + array[i] + "}"
                 tlPrint(message: array)
+                //["{\"Activity_Code\":\"Second15\",\"Main_Title\":\"再存15%\",\"Id\":89}}", "\"Activity_Code\":\"Second25\",\"Main_Title\":\"再存25%\",\"Id\":90}", "\"Activity_Code\":\"AGFirstDpBonus\",\"Main_Title\":\"【AG首存优惠】\",\"Id\":100}", "\"Activity_Code\":\"AGSecond8\",\"Main_Title\":\"【AG再存优惠】\",\"Id\":101}\""]
                 //将字符串转换为字典，放到字典数组里面
                 if let activesInfo = array[i].toDictionary(dicString: array[i]) {
                     if listDicArray == nil {
@@ -269,10 +270,6 @@ class RechargeModel: NSObject {
         }, failure: { (error) in
             tlPrint(message: "Error:\(error)")
         })
-    
-        
-
-        
     }
     /*
      

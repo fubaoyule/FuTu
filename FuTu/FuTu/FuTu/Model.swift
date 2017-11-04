@@ -132,7 +132,7 @@ enum userDefaultsKeys: String {
 }
 
 //当前是否为发布模式
-let isRelease = false
+let isRelease = true
 
 //手机和iPad判断标志
 var isPhone = true
@@ -232,19 +232,19 @@ func futuNetworkRequest(type:NetworkRequestType,serializer:NetworkRequestType,ur
         if type == .get {
             manager.get(urlString, parameters: para, progress: { (downloadProgress) in
             }, success: { (task, responseObject) in
-                tlPrint(message: "成功 \n responseObject:\(String(describing: responseObject))")
+                tlPrint(message: "\(url) 请求成功 \n responseObject:\(String(describing: responseObject))")
                 success(responseObject ?? "success")
             }, failure: { (task, error) in
-                tlPrint(message: "请求失败\n ERROR:\n\(error)")
+                tlPrint(message: "\(url) 请求失败\n ERROR:\n\(error)")
                 failure(error)
             })
         } else if type == .post {
             manager.post(urlString, parameters: para, progress: { (downloadProgress) in
             }, success: { (task, responseObject) in
-                tlPrint(message: "成功 \n responseObject:\(responseObject)")
+                tlPrint(message: "\(url) 请求成功 \n responseObject:\(responseObject)")
                 success(responseObject)
             }, failure: { (task, error) in
-                tlPrint(message: "请求失败\n ERROR:\n\(error)")
+                tlPrint(message: "\(url) 请求失败\n ERROR:\n\(error)")
                 failure(error)
             })
         }

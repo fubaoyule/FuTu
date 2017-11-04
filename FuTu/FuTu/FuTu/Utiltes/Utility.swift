@@ -11,7 +11,7 @@ import UIKit
 
 //定制Log
 public func tlPrint<T>(message:T,file:String = #file, fun:String = #function, lint:Int = #line) {
-    print("\((file as NSString).lastPathComponent) [\(lint)]:  \n-->>  \(message)  <<--\n")
+//    print("\((file as NSString).lastPathComponent) [\(lint)]:  \n-->>  \(message)  <<--\n")
     //print("\((file as NSString).lastPathComponent) - \(fun) [\(lint)]: \(message)\n")
     return
 }
